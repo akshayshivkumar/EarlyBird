@@ -6,7 +6,7 @@
     <title>Early Bird</title>
     <!-- Updated fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Quicksand:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Quicksand:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
@@ -56,38 +56,50 @@
         <!-- CUSTOM TIME PICKER END -->
 
         <p>
-          <strong>Tip:</strong> Click <em>"Sleep Now"</em> to instantly
+          <strong>Tip:</strong> Click <em>"Choose For Me"</em> to instantly
           calculate a recommended wake-up time based on optimal sleep cycle
           data.
         </p>
-        <button class="animated-btn big-button" onclick="startSleep()">
-          Start Alarm
-        </button>
-        <button class="animated-btn big-button" onclick="startSleep('now')">
-          Choose For Me
-        </button>
+        <div class="button-group">
+          <button class="animated-btn big-button" onclick="startSleep()">
+            Start Alarm
+          </button>
+          <button class="animated-btn big-button" onclick="startSleep('now')">
+            Choose For Me
+          </button>
+        </div>
       </section>
     </div>
     <!-- Page 2: Sleep Monitoring (Nighttime Theme) -->
     <div id="page2" class="page nighttime" style="display: none">
       <h1>Good Night!</h1>
       <section>
-        <p>Expected Wake-Up Time: <span id="predictedTime">--:--</span></p>
-        <p># Sleep Cycles: <span id="feasibleCycles">--</span></p>
-
-        <!-- ADD THIS COUNTDOWN LINE -->
-        <p>Time until alarm: <span id="countdown">--:--:--</span></p>
-        <!-- END ADD -->
+        <div class="stat-container">
+          <div class="stat-item">
+            <div class="stat-label">Expected Wake-Up Time</div>
+            <div id="predictedTime" class="stat-value">--:--</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Sleep Cycles</div>
+            <div id="feasibleCycles" class="stat-value">--</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Time Until Alarm</div>
+            <div id="countdown" class="stat-value">--:--:--</div>
+          </div>
+        </div>
 
         <p>
           We'll notify you at the optimal time to wake up feeling refreshed!
         </p>
-        <button class="animated-btn big-button" onclick="manualWake()">
-          I'm Awake!
-        </button>
-        <button class="animated-btn big-button" onclick="toggleAlarm()">
-          Snooze
-        </button>
+        <div class="button-group">
+          <button class="animated-btn big-button" onclick="manualWake()">
+            I'm Awake!
+          </button>
+          <button class="animated-btn big-button" onclick="toggleAlarm()">
+            Snooze
+          </button>
+        </div>
       </section>
     </div>
 
@@ -96,21 +108,26 @@
       <h1>Sleep Feedback</h1>
       <section>
         <p>How did you sleep?</p>
-        <button
-          class="animated-btn big-button"
-          onclick="submitFeedback('happy')"
-        >
-          I slept great! 😊
-        </button>
-        <button
-          class="animated-btn big-button"
-          onclick="submitFeedback('okay')"
-        >
-          It was okay 😐
-        </button>
-        <button class="animated-btn big-button" onclick="submitFeedback('sad')">
-          Not good 😞
-        </button>
+        <div class="feedback-container">
+          <button
+            class="animated-btn feedback-btn"
+            onclick="submitFeedback('happy')"
+          >
+            I slept great! 😊
+          </button>
+          <button
+            class="animated-btn feedback-btn"
+            onclick="submitFeedback('okay')"
+          >
+            It was okay 😐
+          </button>
+          <button
+            class="animated-btn feedback-btn"
+            onclick="submitFeedback('sad')"
+          >
+            Not good 😞
+          </button>
+        </div>
       </section>
     </div>
 
@@ -118,15 +135,29 @@
     <div id="page4" class="page daytime" style="display: none">
       <h1>Good Morning!</h1>
       <section>
-        <p>Number of Sleep Cycles: <span id="sleepCycles">0</span></p>
-        <p>Light Sleep (minutes): <span id="lightSleep">0</span></p>
-        <p>Deep Sleep (minutes): <span id="deepSleep">0</span></p>
+        <div class="analytics-container">
+          <div class="analytics-item">
+            <div class="analytics-icon">🔄</div>
+            <div class="analytics-label">Sleep Cycles</div>
+            <div id="sleepCycles" class="analytics-value">0</div>
+          </div>
+          <div class="analytics-item">
+            <div class="analytics-icon">☁️</div>
+            <div class="analytics-label">Light Sleep</div>
+            <div id="lightSleep" class="analytics-value">0</div>
+            <div class="analytics-unit">min</div>
+          </div>
+          <div class="analytics-item">
+            <div class="analytics-icon">🌙</div>
+            <div class="analytics-label">Deep Sleep</div>
+            <div id="deepSleep" class="analytics-value">0</div>
+            <div class="analytics-unit">min</div>
+          </div>
+        </div>
         <p>
           Better sleep leads to better mornings. Track your patterns for
           improved rest!
         </p>
-      </section>
-      <section style="margin-top: 30px">
         <button class="animated-btn big-button" onclick="restart()">
           Plan Next Sleep
         </button>
@@ -138,18 +169,42 @@
       <h1>About Early Bird</h1>
       <section>
         <p>
-          <strong>Early Bird</strong> is a simple application that helps you
-          optimize your wake-up times based on sleep cycles.
+          <strong>Early Bird</strong> is a machine-learning based application
+          that helps you determine what time to wake up based on your EEG data.
         </p>
         <p>
-          Most people take about 14 minutes to fall asleep, and each sleep cycle
-          lasts approximately 90 minutes. Waking up at the end of a cycle helps
-          you feel more refreshed and alert.
+          Using the Sleep-EDF Expanded Dataset, we trained a convolutional
+          neural network (CNN) to recognize different sleep stages: light sleep,
+          deep sleep, and REM sleep.
         </p>
         <p>
-          This app is designed with care to help improve your well-being through
-          better sleep habits.
+          By applying our model to your real-time EEG data input, our
+          smart-alarm will wake you up at the optimal time, considering: when
+          you want to be woken up, the number of sleep cycles you've had, and
+          your sleep state determined by our model.
         </p>
+        <p>
+          When it's time to wake up, we'll gradually turn on the lights in your
+          house automatically (represented by the ESP32 LEDs)!
+        </p>
+        <div class="about-features">
+          <div class="feature">
+            <div class="feature-title">🧠 EEG Monitoring</div>
+            <div class="feature-desc">Tracks brain activity during sleep</div>
+            <br />
+          </div>
+          <div class="feature">
+            <div class="feature-title">⏰ Smart Alarm and Lights</div>
+            <div class="feature-desc">
+              Wakes you at the optimal time with calming bird sounds and lights
+            </div>
+            <br />
+          </div>
+          <div class="feature">
+            <div class="feature-title">📊 Sleep Analytics</div>
+            <div class="feature-desc">Understand your sleep patterns</div>
+          </div>
+        </div>
       </section>
     </div>
 

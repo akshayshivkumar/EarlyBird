@@ -1,55 +1,79 @@
-/* Import modern, clean fonts with a more playful second option */
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Quicksand:wght@400;500;700&display=swap");
+/* Import modern, clean fonts */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Quicksand:wght@300;400;500;600;700&display=swap");
 
 :root {
-    /* Color palette */
-    --sage: #A4B494;
-    --ash-gray: #BEC5AD;
-    --feldgrau: #3B5249;
-    --sea-green: #519872;
-    --raisin-black: #34252F;
+    /* Enhanced color palette */
+    --midnight-blue: #0f3057;
+    --deep-blue: #00587a;
+    --twilight-blue: #008891;
+    --morning-teal: #00a8a8;
+    --dawn-orange: #f67280;
+    --sunrise-yellow: #ffcb74;
+    --daylight-blue: #98d6ea;
+    --cloud-white: #f8f9fa;
 
     /* Functional color assignments */
-    --primary: var(--sea-green);
-    --secondary: var(--sage);
-    --background-dark: var(--raisin-black);
-    --background-light: var(--ash-gray);
-    --accent: var(--feldgrau);
+    --night-primary: var(--deep-blue);
+    --night-secondary: var(--twilight-blue);
+    --night-accent: var(--dawn-orange);
+    --night-background: var(--midnight-blue);
+    --night-surface: rgba(15, 48, 87, 0.7);
+
+    --day-primary: var(--morning-teal);
+    --day-secondary: var(--daylight-blue);
+    --day-accent: var(--sunrise-yellow);
+    --day-background: var(--cloud-white);
+    --day-surface: rgba(248, 249, 250, 0.85);
+
     --text-light: #ffffff;
-    --text-dark: var(--raisin-black);
+    --text-dark: #2d3436;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
 }
 
 body {
     font-family: "Quicksand", sans-serif;
-    background-color: var(--background-dark);
+    background-color: var(--night-background);
     color: var(--text-light);
     text-align: center;
     line-height: 1.6;
     width: 100%;
     min-height: 100vh;
     overflow-x: hidden;
+    position: relative;
 }
 
 /* Top Bar */
 .top-bar {
     width: 100%;
-    background-color: var(--accent);
+    background-color: rgba(0, 88, 122, 0.9);
+    /* Deep blue with opacity */
+    backdrop-filter: blur(8px);
     position: fixed;
     top: 0;
     left: 0;
-    padding: 15px;
+    padding: 15px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     z-index: 999;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-lg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .brand {
@@ -58,15 +82,21 @@ body {
     font-family: "Montserrat", sans-serif;
     font-weight: 700;
     font-size: 1.8rem;
-    margin-left: 10px;
-    color: var(--secondary);
+    color: var(--text-light);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .brand img {
     height: 40px;
-    margin-right: 10px;
+    margin-right: 12px;
     border-radius: 50%;
-    border: 2px solid var(--secondary);
+    /* border: 2px solid var(--night-accent); */
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease;
+}
+
+.brand:hover img {
+    transform: rotate(180deg);
 }
 
 .nav-links {
@@ -84,8 +114,9 @@ body {
     color: var(--text-light);
     font-size: 1.1rem;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
     position: relative;
+    padding: 5px 0;
 }
 
 .nav-links a:before {
@@ -93,14 +124,15 @@ body {
     position: absolute;
     width: 0;
     height: 2px;
-    bottom: -5px;
-    left: 0;
-    background-color: var(--secondary);
-    transition: width 0.3s ease;
+    bottom: 0;
+    left: 50%;
+    background-color: var(--night-accent);
+    transition: all var(--transition-normal);
+    transform: translateX(-50%);
 }
 
 .nav-links a:hover {
-    color: var(--secondary);
+    color: var(--night-accent);
 }
 
 .nav-links a:hover:before {
@@ -117,11 +149,12 @@ body {
     position: relative;
     width: 100%;
     box-sizing: border-box;
+    transition: background 0.8s ease;
 }
 
-/* Nighttime theme: using raisin black with subtle star effect */
+/* Nighttime theme with enhanced star effect */
 .nighttime {
-    background: linear-gradient(to bottom, var(--raisin-black), #2a1e26);
+    background: linear-gradient(135deg, var(--night-background), #051a2d);
     color: var(--text-light);
     overflow: hidden;
 }
@@ -133,17 +166,29 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image:
-        radial-gradient(2px 2px at 40px 60px, white, rgba(0, 0, 0, 0)),
-        radial-gradient(1px 1px at 90px 40px, white, rgba(0, 0, 0, 0)),
-        radial-gradient(2px 2px at 160px 120px, white, rgba(0, 0, 0, 0)),
-        radial-gradient(1px 1px at 220px 180px, white, rgba(0, 0, 0, 0));
+    background-image: radial-gradient(2px 2px at 40px 60px, rgba(255, 255, 255, 0.8), rgba(0, 0, 0, 0)),
+        radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.7), rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 160px 120px, rgba(255, 255, 255, 0.9), rgba(0, 0, 0, 0)),
+        radial-gradient(1px 1px at 220px 180px, rgba(255, 255, 255, 0.6), rgba(0, 0, 0, 0)),
+        radial-gradient(1.5px 1.5px at 320px 240px, rgba(255, 255, 255, 0.8), rgba(0, 0, 0, 0));
     background-repeat: repeat;
-    background-size: 240px 240px;
-    animation: twinkle 60s infinite linear;
-    opacity: 0.5;
+    background-size: 350px 350px;
+    animation: twinkle 120s infinite linear;
+    opacity: 0.6;
     pointer-events: none;
-    z-index: -1;
+    z-index: 0;
+}
+
+.nighttime::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 70% 20%, rgba(0, 136, 145, 0.2) 0%, rgba(15, 48, 87, 0) 50%);
+    pointer-events: none;
+    z-index: 0;
 }
 
 @keyframes twinkle {
@@ -156,22 +201,51 @@ body {
     }
 }
 
-/* Daytime theme: using sage and ash gray */
+/* Daytime theme with enhanced sun effect */
 .daytime {
-    background: linear-gradient(135deg, var(--sage), var(--ash-gray));
+    background: linear-gradient(135deg, var(--day-secondary), var(--day-background));
     color: var(--text-dark);
 }
 
 .daytime::before {
     content: "";
     position: absolute;
-    top: -100px;
-    left: -10%;
-    width: 120%;
+    top: -150px;
+    right: -150px;
+    width: 300px;
     height: 300px;
-    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.5) 0%, rgba(190, 197, 173, 0.3) 40%, rgba(164, 180, 148, 0) 70%);
+    background: radial-gradient(circle at center,
+            var(--sunrise-yellow) 0%,
+            rgba(255, 203, 116, 0.5) 30%,
+            rgba(255, 203, 116, 0) 70%);
     border-radius: 50%;
-    z-index: -1;
+    z-index: 0;
+    animation: sunPulse 10s infinite alternate;
+}
+
+.daytime::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 20%),
+        linear-gradient(to bottom, rgba(152, 214, 234, 0.2) 0%, rgba(248, 249, 250, 0) 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes sunPulse {
+    0% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
 }
 
 /* Headings */
@@ -181,12 +255,30 @@ h1 {
     font-size: 2.5rem;
     font-weight: 700;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    color: var(--primary);
+    color: var(--night-accent);
+    position: relative;
+    z-index: 1;
+}
+
+.nighttime h1 {
+    color: var(--night-accent);
 }
 
 .daytime h1 {
-    color: var(--feldgrau);
-    text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+    color: var(--day-primary);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+h1::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: currentColor;
+    border-radius: 3px;
 }
 
 /* Labels */
@@ -202,33 +294,53 @@ p {
     font-size: 1.1rem;
     line-height: 1.7;
     max-width: 600px;
+    position: relative;
+    z-index: 1;
 }
 
 p strong {
-    color: var(--secondary);
+    color: var(--night-accent);
+    font-weight: 600;
 }
 
 .daytime p strong {
-    color: var(--feldgrau);
+    color: var(--day-primary);
 }
 
 /* Sections for spacing / structure */
 section {
     max-width: 600px;
     margin: 0 auto;
-    background-color: rgba(59, 82, 73, 0.4);
-    /* Feldgrau with opacity */
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(164, 180, 148, 0.2);
-    /* Sage with opacity */
+    background-color: var(--night-surface);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--night-accent), var(--night-secondary));
+    z-index: 2;
 }
 
 .daytime section {
-    background-color: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(59, 82, 73, 0.2);
-    /* Feldgrau with opacity */
+    background-color: var(--day-surface);
+    border: 1px solid rgba(0, 168, 168, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.daytime section::before {
+    background: linear-gradient(90deg, var(--day-primary), var(--day-accent));
 }
 
 /* Custom Time Picker Container */
@@ -238,72 +350,98 @@ section {
     justify-content: center;
     flex-wrap: wrap;
     margin: 1.5rem 0;
-    background-color: rgba(52, 37, 47, 0.6);
-    /* Raisin Black with opacity */
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid var(--sage);
+    background-color: rgba(0, 88, 122, 0.3);
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid rgba(0, 136, 145, 0.3);
+    position: relative;
+    z-index: 1;
 }
 
 .daytime .custom-time-picker {
-    background-color: rgba(81, 152, 114, 0.15);
-    /* Sea Green with opacity */
-    border: 1px solid var(--feldgrau);
+    background-color: rgba(0, 168, 168, 0.1);
+    border: 1px solid rgba(0, 168, 168, 0.2);
 }
 
 /* Dropdown (select) styling */
 .custom-time-picker select {
-    background-color: var(--ash-gray);
-    color: var(--raisin-black);
-    border-radius: 8px;
-    border: none;
+    background-color: rgba(15, 48, 87, 0.8);
+    color: var(--text-light);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 1.2rem;
     font-family: "Quicksand", sans-serif;
-    padding: 10px 15px;
+    padding: 12px 20px;
     margin: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
     cursor: pointer;
     appearance: none;
     text-align-last: center;
-    min-width: 70px;
+    min-width: 80px;
+    transition: all var(--transition-normal);
 }
 
 .custom-time-picker select:focus {
-    outline: 2px solid var(--primary);
+    outline: none;
+    border-color: var(--night-accent);
+    box-shadow: 0 0 0 3px rgba(246, 114, 128, 0.3);
+}
+
+.custom-time-picker select:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.daytime .custom-time-picker select {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: var(--text-dark);
+    border: 1px solid rgba(0, 168, 168, 0.3);
+}
+
+.daytime .custom-time-picker select:focus {
+    border-color: var(--day-primary);
+    box-shadow: 0 0 0 3px rgba(0, 168, 168, 0.2);
 }
 
 /* Buttons */
 button {
-    background-color: var(--primary);
+    background: linear-gradient(135deg, var(--night-secondary), var(--night-primary));
     color: var(--text-light);
     border: none;
-    padding: 12px 25px;
+    padding: 14px 28px;
     margin: 15px;
     border-radius: 30px;
     font-size: 1.1rem;
     font-weight: 600;
     font-family: "Quicksand", sans-serif;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-md);
     letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
 }
 
 button:hover {
-    background-color: var(--secondary);
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
 }
 
 button:active {
     transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-sm);
+}
+
+.daytime button {
+    background: linear-gradient(135deg, var(--day-primary), var(--morning-teal));
+    color: var(--text-light);
 }
 
 /* Larger button size */
 .big-button {
     font-size: 1.2rem;
-    padding: 15px 35px;
+    padding: 16px 36px;
     position: relative;
     overflow: hidden;
 }
@@ -316,13 +454,13 @@ button:active {
 }
 
 .animated-btn:before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(190, 197, 173, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: left 0.7s;
     z-index: -1;
 }
@@ -334,20 +472,52 @@ button:active {
 /* Stats display styling */
 #predictedTime,
 #feasibleCycles,
+#countdown,
 #sleepCycles,
 #lightSleep,
 #deepSleep {
     font-weight: bold;
-    color: var(--secondary);
-    font-size: 1.2rem;
+    color: var(--night-accent);
+    font-size: 1.3rem;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 8px;
+    background-color: rgba(15, 48, 87, 0.4);
+    margin: 0 5px;
+    min-width: 80px;
 }
 
 .daytime #predictedTime,
 .daytime #feasibleCycles,
+.daytime #countdown,
 .daytime #sleepCycles,
 .daytime #lightSleep,
 .daytime #deepSleep {
-    color: var(--accent);
+    color: var(--day-primary);
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Countdown styling */
+#countdown {
+    font-family: "Montserrat", sans-serif;
+    letter-spacing: 1px;
+}
+
+/* Page transitions */
+.page {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* RESPONSIVE MEDIA QUERIES */
@@ -380,6 +550,15 @@ button:active {
     section {
         padding: 20px;
     }
+
+    #predictedTime,
+    #feasibleCycles,
+    #countdown,
+    #sleepCycles,
+    #lightSleep,
+    #deepSleep {
+        font-size: 1.1rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -400,7 +579,6 @@ button:active {
     }
 
     .custom-time-picker {
-        background-color: var(--primary);
         flex-direction: column;
         padding: 15px 10px;
     }
@@ -411,5 +589,10 @@ button:active {
 
     p {
         font-size: 1rem;
+    }
+
+    .big-button {
+        width: 100%;
+        margin: 10px 0;
     }
 }
