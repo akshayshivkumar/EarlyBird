@@ -4,20 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Early Bird</title>
-    <!-- Updated fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Quicksand:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
-    <!-- Adding favicon -->
     <link rel="icon" type="image/jpg" href="bird.png" />
   </head>
   <body>
-    <!-- Top Bar -->
     <div class="top-bar">
       <h2 class="brand">
-        <img src="bird.png" alt="Early Bird Logo" />Early Bird
+        <img src="bird.png" alt="Early Bird Logo" />EarlyBird
       </h2>
       <ul class="nav-links">
         <li><a href="#" onclick="showPage('page1')">Home</a></li>
@@ -26,21 +23,19 @@
       </ul>
     </div>
 
-    <!-- Hidden audio element for alarm -->
     <audio id="alarmAudio" loop style="display: none">
       <source src="alarm.mp3" type="audio/mp3" />
       Your browser does not support the audio element.
     </audio>
 
-    <!-- Page 1: Home / Sleep Setup (Nighttime Theme) -->
+    <!-- Page 1: Home / Sleep Setup-->
     <div id="page1" class="page nighttime">
       <h1>Set Your Sleep Schedule</h1>
       <section>
         <p>
-          Welcome to <strong>Early Bird</strong>! Set your desired wake-up time
+          Welcome to <strong>EarlyBird</strong>! Set your desired wake-up time
           and we'll help you wake up at the optimal time tomorrow.
         </p>
-        <!-- CUSTOM TIME PICKER START -->
         <div class="custom-time-picker">
           <select id="hours"></select>
 
@@ -53,8 +48,51 @@
             <option value="PM">PM</option>
           </select>
         </div>
-        <!-- CUSTOM TIME PICKER END -->
+        <div class="options-container">
+          <div class="option-group">
+            <label class="checkbox-container">
+              <input
+                type="checkbox"
+                id="napMode"
+                onchange="toggleNapOptions()"
+              />
+              <span class="checkmark"></span>
+              <span class="option-text">Nap Mode</span>
+            </label>
 
+            <div id="napOptions" class="sub-options" style="display: none">
+              <label class="radio-container">
+                <input
+                  type="radio"
+                  name="napLength"
+                  id="shortNap"
+                  value="short"
+                  checked
+                />
+                <span class="radio-checkmark"></span>
+                <span class="option-text">Short (20-30 min)</span>
+              </label>
+              <label class="radio-container">
+                <input
+                  type="radio"
+                  name="napLength"
+                  id="longNap"
+                  value="long"
+                />
+                <span class="radio-checkmark"></span>
+                <span class="option-text">Long (90 min)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="option-group">
+            <label class="checkbox-container">
+              <input type="checkbox" id="eegData" />
+              <span class="checkmark"></span>
+              <span class="option-text">Use EEG Data</span>
+            </label>
+          </div>
+        </div>
         <p>
           <strong>Tip:</strong> Click <em>"Choose For Me"</em> to instantly
           calculate a recommended wake-up time based on optimal sleep cycle
@@ -70,7 +108,7 @@
         </div>
       </section>
     </div>
-    <!-- Page 2: Sleep Monitoring (Nighttime Theme) -->
+    <!-- Page 2: Sleep Monitoring-->
     <div id="page2" class="page nighttime" style="display: none">
       <h1>Good Night!</h1>
       <section>
@@ -79,6 +117,12 @@
             <div class="stat-label">Expected Wake-Up Time</div>
             <div id="predictedTime" class="stat-value">--:--</div>
           </div>
+
+          <div class="stat-item">
+            <div class="stat-label">Wake Up Window</div>
+            <div id="wakeUpWindow" class="stat-value">--</div>
+          </div>
+
           <div class="stat-item">
             <div class="stat-label">Sleep Cycles</div>
             <div id="feasibleCycles" class="stat-value">--</div>
@@ -103,7 +147,7 @@
       </section>
     </div>
 
-    <!-- Page 3: Sleep Feedback (Nighttime Theme) -->
+    <!-- Page 3: Sleep Feedback -->
     <div id="page3" class="page daytime" style="display: none">
       <h1>Sleep Feedback</h1>
       <section>
@@ -131,25 +175,22 @@
       </section>
     </div>
 
-    <!-- Page 4: Sleep Analytics (Daytime Theme) -->
+    <!-- Page 4: Sleep Analytics -->
     <div id="page4" class="page daytime" style="display: none">
       <h1>Good Morning!</h1>
       <section>
         <div class="analytics-container">
           <div class="analytics-item">
-            <div class="analytics-icon">🔄</div>
-            <div class="analytics-label">Sleep Cycles</div>
+            <div class="analytics-label">🔄 Sleep Cycles</div>
             <div id="sleepCycles" class="analytics-value">0</div>
           </div>
           <div class="analytics-item">
-            <div class="analytics-icon">☁️</div>
-            <div class="analytics-label">Light Sleep</div>
+            <div class="analytics-label">☁️ Light Sleep</div>
             <div id="lightSleep" class="analytics-value">0</div>
             <div class="analytics-unit">min</div>
           </div>
           <div class="analytics-item">
-            <div class="analytics-icon">🌙</div>
-            <div class="analytics-label">Deep Sleep</div>
+            <div class="analytics-label">🌙 Deep Sleep</div>
             <div id="deepSleep" class="analytics-value">0</div>
             <div class="analytics-unit">min</div>
           </div>
@@ -164,7 +205,7 @@
       </section>
     </div>
 
-    <!-- Page 5: About (Nighttime Theme) -->
+    <!-- Page 5: About -->
     <div id="page5" class="page nighttime" style="display: none">
       <h1>About Early Bird</h1>
       <section>

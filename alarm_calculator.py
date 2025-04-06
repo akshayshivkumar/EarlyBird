@@ -2,11 +2,6 @@
 import datetime
 
 def calculate_wake_up(desired_wake_time):
-    """
-    Temporary function to calculate the optimal wake-up time.
-    Assumes 14 minutes to fall asleep and 90 minutes per sleep cycle.
-    Calculates the number of full cycles that fit between now+14 minutes and the desired wake-up time.
-    """
     now = datetime.datetime.now()
     fall_asleep_time = now + datetime.timedelta(minutes=14)
     remaining_minutes = (desired_wake_time - fall_asleep_time).total_seconds() / 60

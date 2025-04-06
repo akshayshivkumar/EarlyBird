@@ -1,10 +1,9 @@
 let alarmTime = null;
-let alarmOn = false; // Indicates if an alarm is scheduled
-let alarmRinging = false; // Indicates if the alarm sound is playing
+let alarmOn = false;
+let alarmRinging = false;
 let alarmInterval;
 
-// We'll store the last night's data here, so the Analytics page can show it.
-let lastSleepData = {
+const lastSleepData = {
   cycles: 0,
   lightSleep: 0,
   deepSleep: 0,
@@ -15,22 +14,44 @@ let lastSleepData = {
  */
 function showPage(pageId) {
   const pages = document.querySelectorAll(".page");
+
   pages.forEach((page) => {
-    page.style.display = "none";
+    page.style.opacity = "0";
+    setTimeout(() => {
+      page.style.display = "none";
+    }, 300);
   });
-  document.getElementById(pageId).style.display = "block";
+
+  setTimeout(() => {
+    const targetPage = document.getElementById(pageId);
+    targetPage.style.display = "block";
+
+    void targetPage.offsetWidth;
+
+    targetPage.style.opacity = "1";
+
+    const isDaytime = targetPage.classList.contains("daytime");
+    updateTopBarTheme(isDaytime);
+  }, 350);
 }
 
-/**
- * Initializes our custom time picker (hours, minutes, AM/PM).
- * We'll call this once DOM content is loaded.
- */
+function updateTopBarTheme(isDaytime) {
+  const topBar = document.querySelector(".top-bar");
+
+  if (isDaytime) {
+    topBar.style.backgroundColor = "rgba(0, 168, 168, 0.9)";
+    topBar.style.borderBottom = "1px solid rgba(255, 255, 255, 0.2)";
+  } else {
+    topBar.style.backgroundColor = "rgba(0, 88, 122, 0.9)";
+    topBar.style.borderBottom = "1px solid rgba(255, 255, 255, 0.1)";
+  }
+}
+
 function initCustomTimePicker() {
   const hoursSelect = document.getElementById("hours");
   const minutesSelect = document.getElementById("minutes");
   const ampmSelect = document.getElementById("ampm");
 
-  // Populate hours [1..12]
   for (let h = 1; h <= 12; h++) {
     const option = document.createElement("option");
     option.value = h;
@@ -38,7 +59,6 @@ function initCustomTimePicker() {
     hoursSelect.appendChild(option);
   }
 
-  // Populate minutes [00..59]
   for (let m = 0; m < 60; m++) {
     const option = document.createElement("option");
     const val = m < 10 ? "0" + m : m;
@@ -47,25 +67,19 @@ function initCustomTimePicker() {
     minutesSelect.appendChild(option);
   }
 
-  // By default set the time to 8:00 AM
   hoursSelect.value = "8";
   minutesSelect.value = "00";
   ampmSelect.value = "AM";
 }
 
-/**
- * Extracts the time from our custom time picker <select> elements
- * and returns a Date object representing *today’s* date with that time.
- * If the selected time has already passed, we'll handle that logic in startSleep().
- */
 function getSelectedTime() {
   const now = new Date();
   const hoursSelect = document.getElementById("hours");
   const minutesSelect = document.getElementById("minutes");
   const ampmSelect = document.getElementById("ampm");
 
-  let hours = parseInt(hoursSelect.value);
-  const minutes = parseInt(minutesSelect.value);
+  let hours = Number.parseInt(hoursSelect.value);
+  const minutes = Number.parseInt(minutesSelect.value);
   const ampm = ampmSelect.value;
 
   if (ampm === "PM" && hours < 12) {
@@ -85,68 +99,107 @@ function getSelectedTime() {
   return selectedTime;
 }
 
-/**
- * Starts the sleep flow based on user input or "now".
- */
+function toggleNapOptions() {
+  const napCheckbox = document.getElementById("napMode");
+  const napOptions = document.getElementById("napOptions");
+
+  if (napCheckbox.checked) {
+    napOptions.style.display = "block";
+  } else {
+    napOptions.style.display = "none";
+  }
+}
+
+// Add a global variable to store the *exact* user-chosen wake time (not the predicted).
+let userChosenWakeTime = null;
+
 function startSleep(option) {
   let wakeTime;
-  if (option === "now") {
-    // Sleep Now: set wake-up time to now + 14 min + one 90-min cycle
-    const now = new Date();
-    wakeTime = new Date(now.getTime() + (14 + 90) * 60000);
-  } else {
-    // Use the custom time picker
-    wakeTime = getSelectedTime();
+  const napMode = document.getElementById("napMode").checked;
+  const useEEG = document.getElementById("eegData").checked;
+  const shortNap = document.getElementById("shortNap").checked;
 
-    // If the selected time has already passed today, assume it’s for tomorrow
+  // If user clicks "Choose For Me"
+  if (option === "now") {
+    const now = new Date();
+    if (napMode) {
+      // Nap logic ...
+      const napDuration = shortNap ? Math.random() * 10 + 20 : 90;
+      wakeTime = new Date(now.getTime() + napDuration * 60000);
+    } else {
+      // Normal sleep ...
+      wakeTime = new Date(now.getTime() + (14 + 90) * 60000);
+    }
+  } else {
+    // If user set time manually
+    wakeTime = getSelectedTime();
     const now = new Date();
     if (wakeTime <= now) {
       wakeTime.setDate(wakeTime.getDate() + 1);
     }
   }
 
-  // Calculate the predicted wake-up time
-  const result = calculatePredictedWakeTime(wakeTime);
+  // Store the user-chosen time (i.e., the 'inputted' wake time before cycle adjustments)
+  userChosenWakeTime = new Date(wakeTime.getTime());
+
+  // Calculate the predicted / final alarm time
+  const result = calculatePredictedWakeTime(wakeTime, napMode, shortNap);
   alarmTime = result.predictedTime;
 
-  // Update UI
+  // Show the predicted alarm time and cycles
   document.getElementById("predictedTime").innerText = formatTime(alarmTime);
   document.getElementById("feasibleCycles").innerText = result.cycles;
+
+  // Compute the one-hour-earlier window
+  const windowStart = new Date(userChosenWakeTime.getTime() - 60 * 60 * 1000);
+  const windowEnd = userChosenWakeTime;
+  document.getElementById("wakeUpWindow").innerText =
+    formatTime(windowStart) + " - " + formatTime(windowEnd);
 
   // Go to the Sleep Monitoring page
   showPage("page2");
 
-  // Start checking for alarm condition every second
   alarmOn = true;
   alarmInterval = setInterval(checkAlarm, 1000);
-}
 
-/**
- * Predicts the wake-up time considering 14 min to fall asleep + 90-min cycles.
- */
-function calculatePredictedWakeTime(desiredWakeTime) {
-  const now = new Date();
-  // 14 minutes to fall asleep
-  const fallAsleepTime = new Date(now.getTime() + 14 * 60000);
-
-  let remainingMinutes = (desiredWakeTime - fallAsleepTime) / 60000;
-  let cycles = Math.floor(remainingMinutes / 90);
-
-  if (cycles < 1) {
-    cycles = 0;
-    return { predictedTime: desiredWakeTime, cycles };
-  }
-  const predictedTime = new Date(
-    fallAsleepTime.getTime() + cycles * 90 * 60000
+  console.log(
+    `Sleep settings: Nap Mode: ${napMode}, Short Nap: ${shortNap}, EEG Data: ${useEEG}`
   );
-  return { predictedTime, cycles };
 }
 
-/**
- * Formats a Date object into 12-hour time with AM/PM.
- */
+function calculatePredictedWakeTime(
+  desiredWakeTime,
+  isNap = false,
+  isShortNap = true
+) {
+  const now = new Date();
+
+  if (isNap) {
+    const napDuration = isShortNap ? Math.random() * 10 + 20 : 90; // 20-30 min for short nap, 90 for long
+    const cycles = isShortNap ? 0 : 1; // Short naps don't complete a full cycle
+
+    const predictedTime = new Date(now.getTime() + napDuration * 60000);
+
+    return { predictedTime, cycles };
+  } else {
+    const fallAsleepTime = new Date(now.getTime() + 14 * 60000);
+
+    const remainingMinutes = (desiredWakeTime - fallAsleepTime) / 60000;
+    let cycles = Math.floor(remainingMinutes / 90);
+
+    if (cycles < 1) {
+      cycles = 0;
+      return { predictedTime: desiredWakeTime, cycles };
+    }
+    const predictedTime = new Date(
+      fallAsleepTime.getTime() + cycles * 90 * 60000
+    );
+    return { predictedTime, cycles };
+  }
+}
+
 function formatTime(date) {
-  let hours = date.getHours();
+  const hours = date.getHours();
   let minutes = date.getMinutes();
   const ampm = hours >= 12 ? "PM" : "AM";
   let hours12 = hours % 12;
@@ -155,131 +208,16 @@ function formatTime(date) {
   return hours12 + ":" + minutes + " " + ampm;
 }
 
-/**
- * Checks if the alarm time has been reached.
- */
-function checkAlarm() {
-  const now = new Date();
-  if (alarmOn && now >= alarmTime) {
-    ringAlarm();
-    clearInterval(alarmInterval);
-  }
-}
-
-/**
- * Plays the alarm sound if not already playing.
- */
-function ringAlarm() {
-  const audio = document.getElementById("alarmAudio");
-  if (!alarmRinging) {
-    alarmRinging = true;
-    audio.play();
-  }
-}
-
-/**
- * Allows the user to manually wake up (stop alarm if ringing)
- * and move on to feedback.
- */
-function manualWake() {
-  stopAlarm();
-  fetch("http://localhost:3000/off")
-    .then((response) => response.text())
-    .then((data) => console.log(data));
-  document.getElementById("countdown").innerText = "--:--:--";
-  transitionToFeedback();
-}
-
-/**
- * Toggles the alarm sound on/off if the alarm time has passed.
- */
-function toggleAlarm() {
-  const audio = document.getElementById("alarmAudio");
-  const now = new Date();
-  if (alarmRinging) {
-    stopAlarm();
-    // transitionToFeedback();
-  } else {
-    if (alarmOn && now >= alarmTime) {
-      alarmRinging = true;
-      audio.play();
-    } else {
-      alert("Alarm is not active yet.");
-    }
-  }
-}
-
-/**
- * Stops the alarm if it’s playing.
- */
-function stopAlarm() {
-  const audio = document.getElementById("alarmAudio");
-  if (alarmRinging) {
-    audio.pause();
-    audio.currentTime = 0;
-    alarmRinging = false;
-  }
-}
-
-/**
- * Moves from the Monitoring page (page2) to the Feedback page (page3).
- */
-function transitionToFeedback() {
-  showPage("page3");
-}
-
-/**
- * Submits user feedback, logs it, and transitions to Analytics (page4).
- */
-function submitFeedback(feedback) {
-  console.log("User feedback:", feedback);
-  // Generate new random analytics data
-  lastSleepData.cycles = Math.floor(Math.random() * 5) + 3;
-  lastSleepData.lightSleep = Math.floor(Math.random() * 120) + 60;
-  lastSleepData.deepSleep = Math.floor(Math.random() * 60) + 30;
-
-  showAnalytics();
-}
-
-/**
- * Displays the most recent night of sleep analytics on page4.
- */
-function showAnalytics() {
-  document.getElementById("sleepCycles").innerText = lastSleepData.cycles;
-  document.getElementById("lightSleep").innerText = lastSleepData.lightSleep;
-  document.getElementById("deepSleep").innerText = lastSleepData.deepSleep;
-
-  showPage("page4");
-}
-
-/**
- * Resets the app and returns to the Home page (page1).
- */
-function restart() {
-  showPage("page1");
-  alarmOn = false;
-  alarmRinging = false;
-  clearInterval(alarmInterval);
-}
-
-/**
- * Once everything loads, populate the custom time picker.
- */
-document.addEventListener("DOMContentLoaded", () => {
-  initCustomTimePicker();
-  showPage("page1");
-});
-
 function checkAlarm() {
   const now = new Date();
   const timeRemaining = alarmTime - now;
 
-  // If time’s up, ring alarm and fade LED
+  // If time's up, ring alarm and fade LED
   if (alarmOn && timeRemaining <= 0) {
     ringAlarm();
     clearInterval(alarmInterval);
     fadeLEDLocally(); // Trigger the LED fade
-    return; // Then exit the function
+    return;
   }
 
   // Otherwise, update countdown
@@ -302,6 +240,99 @@ function checkAlarm() {
   }
 }
 
+function ringAlarm() {
+  const audio = document.getElementById("alarmAudio");
+  if (!alarmRinging) {
+    alarmRinging = true;
+    audio.play();
+
+    // Add visual pulsing effect to the page
+    const page = document.getElementById("page2");
+    page.classList.add("alarm-active");
+
+    const pulseEffect = setInterval(() => {
+      page.style.backgroundColor = "rgba(246, 114, 128, 0.2)";
+      setTimeout(() => {
+        page.style.backgroundColor = "";
+      }, 500);
+    }, 1000);
+
+    window.pulseEffectInterval = pulseEffect;
+  }
+}
+
+function manualWake() {
+  stopAlarm();
+  fetch("http://localhost:3000/off")
+    .then((response) => response.text())
+    .then((data) => console.log(data))
+    .catch((err) => console.error("Error calling local server:", err));
+  document.getElementById("countdown").innerText = "--:--:--";
+  transitionToFeedback();
+}
+
+function toggleAlarm() {
+  const audio = document.getElementById("alarmAudio");
+  const now = new Date();
+  if (alarmRinging) {
+    stopAlarm();
+    // transitionToFeedback();
+  } else {
+    if (alarmOn && now >= alarmTime) {
+      alarmRinging = true;
+      audio.play();
+    } else {
+      alert("Alarm is not active yet.");
+    }
+  }
+}
+
+function stopAlarm() {
+  const audio = document.getElementById("alarmAudio");
+  if (alarmRinging) {
+    audio.pause();
+    audio.currentTime = 0;
+    alarmRinging = false;
+
+    const page = document.getElementById("page2");
+    page.classList.remove("alarm-active");
+
+    if (window.pulseEffectInterval) {
+      clearInterval(window.pulseEffectInterval);
+    }
+  }
+}
+
+function transitionToFeedback() {
+  showPage("page3");
+}
+
+function submitFeedback(feedback) {
+  console.log("User feedback:", feedback);
+  // Generate new random analytics data
+  lastSleepData.cycles = Math.floor(Math.random() * 5) + 3;
+  lastSleepData.lightSleep = Math.floor(Math.random() * 120) + 60;
+  lastSleepData.deepSleep = Math.floor(Math.random() * 60) + 30;
+
+  showAnalytics();
+}
+
+function showAnalytics() {
+  document.getElementById("sleepCycles").innerText = lastSleepData.cycles;
+  document.getElementById("lightSleep").innerText = lastSleepData.lightSleep;
+  document.getElementById("deepSleep").innerText = lastSleepData.deepSleep;
+
+  showPage("page4");
+}
+
+function restart() {
+  showPage("page1");
+  alarmOn = false;
+  alarmRinging = false;
+  clearInterval(alarmInterval);
+}
+
+/*Calls the local server to fade the LED*/
 function fadeLEDLocally() {
   fetch("http://localhost:3000/fade")
     .then((response) => response.text())
@@ -312,3 +343,29 @@ function fadeLEDLocally() {
       console.error("Error calling local server:", err);
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const styleElement = document.createElement("style");
+  styleElement.textContent = `
+    .alarm-active {
+      animation: alarmPulse 1s infinite alternate;
+    }
+    
+    @keyframes alarmPulse {
+      0% {
+        background-color: var(--night-background);
+      }
+      100% {
+        background-color: rgba(246, 114, 128, 0.2);
+      }
+    }
+  `;
+  document.head.appendChild(styleElement);
+
+  initCustomTimePicker();
+  showPage("page1");
+
+  document
+    .getElementById("napMode")
+    .addEventListener("change", toggleNapOptions);
+});
