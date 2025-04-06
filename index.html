@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Early Bird</title>
+    <!-- Updated fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Quicksand:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <!-- Adding favicon -->
+    <link rel="icon" type="image/jpg" href="bird.png" />
+  </head>
+  <body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <h2 class="brand">
+        <img src="bird.png" alt="Early Bird Logo" />Early Bird
+      </h2>
+      <ul class="nav-links">
+        <li><a href="#" onclick="showPage('page1')">Home</a></li>
+        <li><a href="#" onclick="showPage('page4')">Analytics</a></li>
+        <li><a href="#" onclick="showPage('page5')">About</a></li>
+      </ul>
+    </div>
+
+    <!-- Hidden audio element for alarm -->
+    <audio id="alarmAudio" loop style="display: none">
+      <source src="alarm.mp3" type="audio/mp3" />
+      Your browser does not support the audio element.
+    </audio>
+
+    <!-- Page 1: Home / Sleep Setup (Nighttime Theme) -->
+    <div id="page1" class="page nighttime">
+      <h1>Set Your Sleep Schedule</h1>
+      <section>
+        <p>
+          Welcome to <strong>Early Bird</strong>! Set your desired wake-up time
+          and we'll help you wake up at the optimal time tomorrow.
+        </p>
+        <!-- CUSTOM TIME PICKER START -->
+        <div class="custom-time-picker">
+          <select id="hours"></select>
+
+          <label for="minutes">:</label>
+          <select id="minutes"></select>
+
+          <label for="ampm"></label>
+          <select id="ampm">
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+          </select>
+        </div>
+        <!-- CUSTOM TIME PICKER END -->
+
+        <p>
+          <strong>Tip:</strong> Click <em>"Sleep Now"</em> to instantly
+          calculate a recommended wake-up time based on optimal sleep cycle
+          data.
+        </p>
+        <button class="animated-btn big-button" onclick="startSleep()">
+          Start Alarm
+        </button>
+        <button class="animated-btn big-button" onclick="startSleep('now')">
+          Choose For Me
+        </button>
+      </section>
+    </div>
+    <!-- Page 2: Sleep Monitoring (Nighttime Theme) -->
+    <div id="page2" class="page nighttime" style="display: none">
+      <h1>Good Night!</h1>
+      <section>
+        <p>Expected Wake-Up Time: <span id="predictedTime">--:--</span></p>
+        <p># Sleep Cycles: <span id="feasibleCycles">--</span></p>
+
+        <!-- ADD THIS COUNTDOWN LINE -->
+        <p>Time until alarm: <span id="countdown">--:--:--</span></p>
+        <!-- END ADD -->
+
+        <p>
+          We'll notify you at the optimal time to wake up feeling refreshed!
+        </p>
+        <button class="animated-btn big-button" onclick="manualWake()">
+          I'm Awake!
+        </button>
+        <button class="animated-btn big-button" onclick="toggleAlarm()">
+          Snooze
+        </button>
+      </section>
+    </div>
+
+    <!-- Page 3: Sleep Feedback (Nighttime Theme) -->
+    <div id="page3" class="page daytime" style="display: none">
+      <h1>Sleep Feedback</h1>
+      <section>
+        <p>How did you sleep?</p>
+        <button
+          class="animated-btn big-button"
+          onclick="submitFeedback('happy')"
+        >
+          I slept great! 😊
+        </button>
+        <button
+          class="animated-btn big-button"
+          onclick="submitFeedback('okay')"
+        >
+          It was okay 😐
+        </button>
+        <button class="animated-btn big-button" onclick="submitFeedback('sad')">
+          Not good 😞
+        </button>
+      </section>
+    </div>
+
+    <!-- Page 4: Sleep Analytics (Daytime Theme) -->
+    <div id="page4" class="page daytime" style="display: none">
+      <h1>Good Morning!</h1>
+      <section>
+        <p>Number of Sleep Cycles: <span id="sleepCycles">0</span></p>
+        <p>Light Sleep (minutes): <span id="lightSleep">0</span></p>
+        <p>Deep Sleep (minutes): <span id="deepSleep">0</span></p>
+        <p>
+          Better sleep leads to better mornings. Track your patterns for
+          improved rest!
+        </p>
+      </section>
+      <section style="margin-top: 30px">
+        <button class="animated-btn big-button" onclick="restart()">
+          Plan Next Sleep
+        </button>
+      </section>
+    </div>
+
+    <!-- Page 5: About (Nighttime Theme) -->
+    <div id="page5" class="page nighttime" style="display: none">
+      <h1>About Early Bird</h1>
+      <section>
+        <p>
+          <strong>Early Bird</strong> is a simple application that helps you
+          optimize your wake-up times based on sleep cycles.
+        </p>
+        <p>
+          Most people take about 14 minutes to fall asleep, and each sleep cycle
+          lasts approximately 90 minutes. Waking up at the end of a cycle helps
+          you feel more refreshed and alert.
+        </p>
+        <p>
+          This app is designed with care to help improve your well-being through
+          better sleep habits.
+        </p>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

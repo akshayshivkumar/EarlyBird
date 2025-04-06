@@ -1,0 +1,415 @@
+/* Import modern, clean fonts with a more playful second option */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Quicksand:wght@400;500;700&display=swap");
+
+:root {
+    /* Color palette */
+    --sage: #A4B494;
+    --ash-gray: #BEC5AD;
+    --feldgrau: #3B5249;
+    --sea-green: #519872;
+    --raisin-black: #34252F;
+
+    /* Functional color assignments */
+    --primary: var(--sea-green);
+    --secondary: var(--sage);
+    --background-dark: var(--raisin-black);
+    --background-light: var(--ash-gray);
+    --accent: var(--feldgrau);
+    --text-light: #ffffff;
+    --text-dark: var(--raisin-black);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+body {
+    font-family: "Quicksand", sans-serif;
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    text-align: center;
+    line-height: 1.6;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Top Bar */
+.top-bar {
+    width: 100%;
+    background-color: var(--accent);
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 999;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-left: 10px;
+    color: var(--secondary);
+}
+
+.brand img {
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--secondary);
+}
+
+.nav-links {
+    list-style-type: none;
+    display: flex;
+    margin-right: 10px;
+}
+
+.nav-links li {
+    margin: 0 15px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-light);
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-links a:before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--secondary);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--secondary);
+}
+
+.nav-links a:hover:before {
+    width: 100%;
+}
+
+/* Page container styles */
+.page {
+    padding: 120px 20px 40px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Nighttime theme: using raisin black with subtle star effect */
+.nighttime {
+    background: linear-gradient(to bottom, var(--raisin-black), #2a1e26);
+    color: var(--text-light);
+    overflow: hidden;
+}
+
+.nighttime::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(2px 2px at 40px 60px, white, rgba(0, 0, 0, 0)),
+        radial-gradient(1px 1px at 90px 40px, white, rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 160px 120px, white, rgba(0, 0, 0, 0)),
+        radial-gradient(1px 1px at 220px 180px, white, rgba(0, 0, 0, 0));
+    background-repeat: repeat;
+    background-size: 240px 240px;
+    animation: twinkle 60s infinite linear;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes twinkle {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 1000px 1000px;
+    }
+}
+
+/* Daytime theme: using sage and ash gray */
+.daytime {
+    background: linear-gradient(135deg, var(--sage), var(--ash-gray));
+    color: var(--text-dark);
+}
+
+.daytime::before {
+    content: "";
+    position: absolute;
+    top: -100px;
+    left: -10%;
+    width: 120%;
+    height: 300px;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.5) 0%, rgba(190, 197, 173, 0.3) 40%, rgba(164, 180, 148, 0) 70%);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+/* Headings */
+h1 {
+    margin-bottom: 30px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    color: var(--primary);
+}
+
+.daytime h1 {
+    color: var(--feldgrau);
+    text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+}
+
+/* Labels */
+label {
+    font-size: 1.1rem;
+    margin: 0 5px;
+    font-weight: 500;
+}
+
+/* Paragraph styling */
+p {
+    margin: 15px 0;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    max-width: 600px;
+}
+
+p strong {
+    color: var(--secondary);
+}
+
+.daytime p strong {
+    color: var(--feldgrau);
+}
+
+/* Sections for spacing / structure */
+section {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: rgba(59, 82, 73, 0.4);
+    /* Feldgrau with opacity */
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(164, 180, 148, 0.2);
+    /* Sage with opacity */
+}
+
+.daytime section {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(59, 82, 73, 0.2);
+    /* Feldgrau with opacity */
+}
+
+/* Custom Time Picker Container */
+.custom-time-picker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 1.5rem 0;
+    background-color: rgba(52, 37, 47, 0.6);
+    /* Raisin Black with opacity */
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--sage);
+}
+
+.daytime .custom-time-picker {
+    background-color: rgba(81, 152, 114, 0.15);
+    /* Sea Green with opacity */
+    border: 1px solid var(--feldgrau);
+}
+
+/* Dropdown (select) styling */
+.custom-time-picker select {
+    background-color: var(--ash-gray);
+    color: var(--raisin-black);
+    border-radius: 8px;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand", sans-serif;
+    padding: 10px 15px;
+    margin: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    appearance: none;
+    text-align-last: center;
+    min-width: 70px;
+}
+
+.custom-time-picker select:focus {
+    outline: 2px solid var(--primary);
+}
+
+/* Buttons */
+button {
+    background-color: var(--primary);
+    color: var(--text-light);
+    border: none;
+    padding: 12px 25px;
+    margin: 15px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: "Quicksand", sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    letter-spacing: 0.5px;
+}
+
+button:hover {
+    background-color: var(--secondary);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Larger button size */
+.big-button {
+    font-size: 1.2rem;
+    padding: 15px 35px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Additional hover animation on buttons */
+.animated-btn {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.animated-btn:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(190, 197, 173, 0.3), transparent);
+    transition: left 0.7s;
+    z-index: -1;
+}
+
+.animated-btn:hover:before {
+    left: 100%;
+}
+
+/* Stats display styling */
+#predictedTime,
+#feasibleCycles,
+#sleepCycles,
+#lightSleep,
+#deepSleep {
+    font-weight: bold;
+    color: var(--secondary);
+    font-size: 1.2rem;
+}
+
+.daytime #predictedTime,
+.daytime #feasibleCycles,
+.daytime #sleepCycles,
+.daytime #lightSleep,
+.daytime #deepSleep {
+    color: var(--accent);
+}
+
+/* RESPONSIVE MEDIA QUERIES */
+@media (max-width: 768px) {
+    .brand {
+        font-size: 1.5rem;
+    }
+
+    .brand img {
+        height: 30px;
+    }
+
+    .nav-links {
+        font-size: 0.9rem;
+    }
+
+    .nav-links li {
+        margin: 0 8px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .big-button {
+        font-size: 1rem;
+        padding: 12px 25px;
+    }
+
+    section {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Adjust top bar layout */
+    .top-bar {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 5px;
+    }
+
+    .brand {
+        margin-bottom: 10px;
+    }
+
+    .nav-links {
+        margin-top: 10px;
+    }
+
+    .custom-time-picker {
+        background-color: var(--primary);
+        flex-direction: column;
+        padding: 15px 10px;
+    }
+
+    section {
+        padding: 15px;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+}
